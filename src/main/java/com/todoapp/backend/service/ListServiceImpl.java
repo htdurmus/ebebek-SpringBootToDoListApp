@@ -2,6 +2,7 @@ package com.todoapp.backend.service;
 
 
 import com.todoapp.backend.dto.ListCreateDTO;
+import com.todoapp.backend.dto.ListNameViewDTO;
 import com.todoapp.backend.dto.ListUpdateDTO;
 import com.todoapp.backend.dto.ListViewDTO;
 import com.todoapp.backend.entity.Liste;
@@ -20,11 +21,9 @@ import java.util.stream.Collectors;
 public class ListServiceImpl implements ListService{
 
     private final ListRepository listRepository;
-
-
     @Override
     public ListViewDTO getListById(long id) {
-        final Liste liste = listRepository.findById(id).orElseThrow(() -> new NotFoundSayfasi("Görev bulunamadı..."));
+        final Liste liste = listRepository.findById(id).orElseThrow(()->new NotFoundSayfasi("Görev bulunamadı..."));
         return ListViewDTO.of(liste);
     }
 
@@ -32,6 +31,12 @@ public class ListServiceImpl implements ListService{
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public java.util.List<ListViewDTO> getLists() {
         return listRepository.findAll().stream().map(ListViewDTO::of).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<ListNameViewDTO> getListNames() {
+        return listRepository.findAll().stream().map(ListNameViewDTO::of).collect(Collectors.toList());
     }
 
     @Override
@@ -58,13 +63,17 @@ public class ListServiceImpl implements ListService{
 
     @Override
     @Transactional
-    public void deleteList(Long id) {
-        final Liste liste = listRepository.findById(id).orElseThrow(() -> new NotFoundSayfasi("Görev bulunamadı!"));
-        listRepository.deleteById(liste.getId());
+    public ListViewDTO updateChecked(Long id, ListUpdateDTO listUpdateDTO){
+        final Liste liste = listRepository.findById(id).orElseThrow(() -> new NotFoundSayfasi("Hata!"));
+        liste.setChecked(listUpdateDTO.isChecked());
+        final Liste updateChecked = listRepository.save(liste);
+        return ListViewDTO.of(updateChecked);
     }
 
     @Override
-    public ListViewDTO getListeByName(String name) {
-        return null;
+    @Transactional
+    public void deleteList(Long id) {
+        final Liste liste = listRepository.findById(id).orElseThrow(() -> new NotFoundSayfasi("Görev bulunamadı!"));
+        listRepository.deleteById(liste.getId());
     }
 }

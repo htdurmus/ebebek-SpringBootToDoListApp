@@ -9,15 +9,10 @@ import java.io.Serializable;
 public class ListViewDTO implements Serializable {
 
     private final Long Id;
-
     private final String task;
-
     private final boolean checked;
-
     private final String finishDate;
-
     private final String listName;
-
     public ListViewDTO(Long id, String task, boolean checked, String finishDate, String listName) {
         Id = id;
         this.task = task;
@@ -25,7 +20,6 @@ public class ListViewDTO implements Serializable {
         this.finishDate = finishDate;
         this.listName = listName;
     }
-
     public static ListViewDTO of(Liste liste){
         return new ListViewDTO(liste.getId(), liste.getTask(), liste.isChecked(), liste.getFinishDate(), liste.getListName());
     }

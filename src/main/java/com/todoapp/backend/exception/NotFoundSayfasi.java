@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NotFoundSayfasi extends RuntimeException {
 
     public NotFoundSayfasi(String message){
-        super(message);
+        super (message);
     }
 
 }
